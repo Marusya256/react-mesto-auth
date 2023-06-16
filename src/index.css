@@ -54,5 +54,6 @@
 @import url(./blocks/header/__user-email/header__user-email.css);
 @import url(./blocks/tooltip/__img/tooltip__img.css);
 @import url(./blocks/tooltip/__header/tooltip__header.css);
+@import url(./blocks/form/__cover/form__cover.css);
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__text/footer__text.css);

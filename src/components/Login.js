@@ -44,12 +44,12 @@ function Login(props) {
   }
 
   return (
-      <main className="">
+      <main>
         <div className="header">
           <img className="logo"  src={logoMesto} alt="Логотип"/>
           <Link to="/sign-up" className="button_type_header">Регистрация</Link>
         </div>
-        <div className="content">
+        <div className="form__cover">
           <form className="login__form" onSubmit={handleSubmit}>
             <h2 className="form__header">Вход</h2>
             <fieldset className="popup__field">

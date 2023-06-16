@@ -16,8 +16,6 @@ import Register from './../components/Register';
 import InfoTooltip from './../components/InfoTooltip';
 import ProtectedRoute from "./ProtectedRoute";
 
-
-
 function App() {
 
   //проверка токена
@@ -146,15 +144,14 @@ function App() {
     setIsInfoTooltipPopupOpen(true);
   }
 
-
   return (
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
           <CurrentCardContext.Provider value={cards}>
             <InfoTooltip isOpen={isInfoTooltipPopupOpen} onClose={closeAllPopups} isGoodRequest={isGoodRequest} openInfoTooltip={handleInfoTooltipClick}/>
-            <EditProfilePopup title="Редактировать профиль" name="popup-edit" onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} buttonText={'Сохранить'}/>
-            <AddPlacePopup title="Новое место" name="popup-place" onAddPlace={handleAddPlace} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} buttonText={'Создать'}/>
-            <EditAvatarPopup title="Обновить аватар" name="popup-update" onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} buttonText={'Сохранить'}/>      
+            <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}/>
+            <AddPlacePopup onAddPlace={handleAddPlace} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
+            <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}/>      
             <DeleteCard title="Вы уверены?" name="popup-delete" buttonText={'Да'}/>
             <Routes>
               <Route  path="/sign-up" element={<Register onRegisteredFailed={handleRegisteredFailed} onRegisteredSuccess={handleRegisteredSuccess}/>}/>
