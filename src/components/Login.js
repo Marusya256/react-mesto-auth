@@ -1,8 +1,8 @@
 import './../App.css';
-import logoMesto from './../images/Logo.svg';
-import {Link, useNavigate} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import mestoAuth from './../utils/mestoAuth';
 import React from 'react';
+import Header from './../components/Header';
 
 function Login(props) {
   const [formValue, setFormValue] = React.useState({
@@ -44,28 +44,25 @@ function Login(props) {
   }
 
   return (
-      <main>
-        <div className="header">
-          <img className="logo"  src={logoMesto} alt="Логотип"/>
-          <Link to="/sign-up" className="button_type_header">Регистрация</Link>
-        </div>
-        <div className="form__cover">
-          <form className="login__form" onSubmit={handleSubmit}>
-            <h2 className="form__header">Вход</h2>
-            <fieldset className="popup__field">
-              <div className="popup__input-label">
-                <input className="popup__input popup__input_type_login" value={formValue.useremail} onChange={handleChange} type="email" name="useremail" id="useremail" required placeholder="Email" minLength="2" maxLength="40" />
-                <span className="popup__input-error username-error"></span>
-              </div>      
-              <div className="popup__input-label">
-                <input className="popup__input popup__input_type_login" value={formValue.password} onChange={handleChange} type="password" name="userpassword" id="userpassword" required placeholder="Пароль" minLength="2" maxLength="40" />
-                <span className="popup__input-error aboutuser-error"></span>
-              </div>
-              <button className="button button_type_sub button_type_login" type="submit">Войти</button>
-            </fieldset>
-          </form>
-        </div>
-      </main>
+    <main>
+      <Header buttonText={'Регистрация'} toLink={"/sign-up"} userEmail={props.userEmail} onClick={props.onClick}/>
+      <div className="form__cover">
+        <form className="login__form" onSubmit={handleSubmit}>
+          <h2 className="form__header">Вход</h2>
+          <fieldset className="popup__field">
+            <div className="popup__input-label">
+              <input className="popup__input popup__input_type_login" value={formValue.useremail} onChange={handleChange} type="email" name="useremail" id="useremail" required placeholder="Email" minLength="2" maxLength="40" />
+              <span className="popup__input-error username-error"></span>
+            </div>      
+            <div className="popup__input-label">
+              <input className="popup__input popup__input_type_login" value={formValue.password} onChange={handleChange} type="password" name="userpassword" id="userpassword" required placeholder="Пароль" minLength="2" maxLength="40" />
+              <span className="popup__input-error aboutuser-error"></span>
+            </div>
+            <button className="button button_type_sub button_type_login" type="submit">Войти</button>
+          </fieldset>
+        </form>
+      </div>
+    </main>
   );
 }
 

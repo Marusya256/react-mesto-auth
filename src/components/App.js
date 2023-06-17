@@ -6,15 +6,16 @@ import EditProfilePopup from './../components/EditProfilePopup';
 import EditAvatarPopup from './../components/EditAvatarPopup';
 import AddPlacePopup from './../components/AddPlacePopup';
 import DeleteCard from './../components/DeleteCard';
+import ImagePopup from "./ImagePopup";
 import api from './../utils/Api';
 import mestoAuth from './../utils/mestoAuth';
-import { CurrentUserContext } from './../context/CurrentUserContext';
-import { CurrentCardContext } from './../context/CurrentCardContext';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from './../components/Login';
 import Register from './../components/Register';
 import InfoTooltip from './../components/InfoTooltip';
 import ProtectedRoute from "./ProtectedRoute";
+import { CurrentUserContext } from './../context/CurrentUserContext';
+import { CurrentCardContext } from './../context/CurrentCardContext';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 function App() {
 
@@ -129,6 +130,37 @@ function App() {
       alert(`failed to set user info, err: ${err}`);
     })
   }
+
+  //реализация постановки и снятия лайка
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    api.updateLike(card._id, isLiked).then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    }).catch(err => {
+      alert(`failed to update like, err: ${err}`);
+    });
+  }
+
+  //зумирование картинки
+
+  // const [selectedCard, setSelectedCard] = React.useState(null);
+
+  function handleCardClick(card) {
+    setSelectedCard(card);
+  }
+
+  //удаление карточек
+
+  function handleCardDelete(cardId) {
+    api.deleteCard(cardId).then(info => {
+      setCards(cards.filter(item => item._id !== cardId));
+      closeAllPopups();
+    }).catch(err => {
+      alert(`failed to set user info, err: ${err}`);
+    })
+  }
   
   // проверка запроса на регистрацию
 
@@ -151,13 +183,14 @@ function App() {
             <InfoTooltip isOpen={isInfoTooltipPopupOpen} onClose={closeAllPopups} isGoodRequest={isGoodRequest} openInfoTooltip={handleInfoTooltipClick}/>
             <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}/>
             <AddPlacePopup onAddPlace={handleAddPlace} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
-            <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}/>      
-            <DeleteCard title="Вы уверены?" name="popup-delete" buttonText={'Да'}/>
+            <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}/>
+            <ImagePopup card={selectedCard} onClose={closeAllPopups}/>    
+            <DeleteCard />
             <Routes>
               <Route  path="/sign-up" element={<Register onRegisteredFailed={handleRegisteredFailed} onRegisteredSuccess={handleRegisteredSuccess}/>}/>
               <Route  path="/sign-in" element={<Login handleLogin={tokenCheck}/>}/>
               <Route  path="/" element={loggedIn ? <Navigate to="/my-profile" replace /> : <Navigate to="/sign-in" replace />} />
-              <Route path="/my-profile" element={<ProtectedRoute loggedIn={loggedIn} cards={cards} setCards={setCards} openEditProfile={handleEditProfileClick} openAddPlace={handleAddPlaceClick} editAvatar={handleEditAvatarClick} userEmail={userEmail} element={Main}/>}/>
+              <Route path="/my-profile" element={<ProtectedRoute loggedIn={loggedIn} cards={cards} handleCardClick={handleCardClick} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} setCards={setCards} openEditProfile={handleEditProfileClick} openAddPlace={handleAddPlaceClick} editAvatar={handleEditAvatarClick} userEmail={userEmail} element={Main}/>}/>
             </Routes>
             <Footer />            
           </CurrentCardContext.Provider>

@@ -1,11 +1,9 @@
 import React from 'react';
 import './../App.css';
 import { CurrentUserContext } from './../context/CurrentUserContext';
-import logoMesto from './../images/Logo.svg';
 import { useNavigate } from 'react-router-dom';
 import Card from './../components/Card';
-import api from './../utils/Api';
-import ImagePopup from './../components/ImagePopup';
+import Header from './../components/Header';
 
 function Main(props) {
 
@@ -23,37 +21,6 @@ function Main(props) {
     props.editAvatar();
   };
 
-  //реализация постановки и снятия лайка
-
-  function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    
-    api.updateLike(card._id, isLiked).then((newCard) => {
-        props.setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    }).catch(err => {
-      alert(`failed to update like, err: ${err}`);
-    });
-  }
-
-  //зумирование картинки
-
-  const [selectedCard, setSelectedCard] = React.useState(null);
-  
-  function handleCardClick(card) {
-    setSelectedCard(card);
-  }
-
-  //удаление карточек
-
-  function handleCardDelete(cardId) {
-    api.deleteCard(cardId).then(info => {
-      props.setCards(props.cards.filter(item => item._id !== cardId));
-      closeAllPopups();
-    }).catch(err => {
-      alert(`failed to set user info, err: ${err}`);
-    })
-  }
-
   //delete token
 
   const navigate = useNavigate();
@@ -64,23 +31,10 @@ function Main(props) {
     navigate('/sign-in', {replace: true});
   }
 
-  //close popup
-  
-  function closeAllPopups() {
-    setSelectedCard(null);
-  }
-
 
   return (
     <main>
-      <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
-      <div className="header">
-        <img className="logo"  src={logoMesto} alt="Логотип"/>
-        <div className="header__conteiner-user">
-          <p className="header__user-email">{props.userEmail}</p>
-          <button className="button_type_header button_type_profile-exit" onClick={signOut}>Выйти</button>
-        </div>
-      </div>
+      <Header buttonText={'Выйти'} userEmail={props.userEmail} onClick={signOut}/>
       <div className="content">
         <section className="profile">
           <img className="profile__photo" src={currentUser.avatar} alt="Фото пользователя"/>
@@ -97,7 +51,7 @@ function Main(props) {
         <section className="gallery">
           <div className="gallery__list">
             {props.cards.map((card, i) => {
-              return <Card card={card} onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete} key={card._id}/>
+              return <Card card={card} onCardClick={props.handleCardClick} onCardLike={props.handleCardLike} onCardDelete={props.handleCardDelete} key={card._id}/>
             })}
           </div>
         </section>
